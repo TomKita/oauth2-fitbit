@@ -16,7 +16,7 @@ class FitBit extends AbstractProvider
      *
      * @var array
      */
-    public $defaultScopes = [];
+    public $defaultScopes = ['profile'];
 
     /**
      * Returns the base URL for authorizing a client.
@@ -27,7 +27,7 @@ class FitBit extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return '';
+        return 'https://www.fitbit.com/oauth2/authorize';
     }
 
     /**
@@ -40,7 +40,7 @@ class FitBit extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        // TODO: Implement getBaseAccessTokenUrl() method.
+        return 'https://api.fitbit.com/oauth2/token';
     }
 
     /**
@@ -51,7 +51,7 @@ class FitBit extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        // TODO: Implement getResourceOwnerDetailsUrl() method.
+        return 'https://api.fitbit.com/1/user/-/profile.json';
     }
 
     /**
@@ -64,7 +64,43 @@ class FitBit extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
-        // TODO: Implement getDefaultScopes() method.
+        return $this->defaultScopes;
+    }
+
+    /**
+     * Returns the authorization headers used by this provider.
+     *
+     * Typically this is "Bearer" or "MAC". For more information see:
+     * http://tools.ietf.org/html/rfc6749#section-7.1
+     *
+     * No default is provided, providers must overload this method to activate
+     * authorization headers.
+     *
+     * @param  mixed|null $token Either a string or an access token instance
+     * @return array
+     */
+    protected function getAuthorizationHeaders($token = null)
+    {
+        return ['Authorization' => 'Bearer ' . $token];
+    }
+
+    /**
+     * Builds request options used for requesting an access token.
+     *
+     * @param  array $params
+     * @return array
+     */
+    protected function getAccessTokenOptions(array $params)
+    {
+        $options = ['headers' =>
+                        ['Authorization' => 'Basic ' . base64_encode($params['client_id'] . ':' . $params['client_secret']),
+                         'content-type'  => 'application/x-www-form-urlencoded']];
+
+        if ($this->getAccessTokenMethod() === self::METHOD_POST) {
+            $options['body'] = $this->getAccessTokenBody($params);
+        }
+
+        return $options;
     }
 
     /**
@@ -77,7 +113,13 @@ class FitBit extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        // TODO: Implement checkResponse() method.
+        if (isset($data['error'])) {
+            throw new IdentityProviderException(
+                $data['error_description'] ?: $response->getReasonPhrase(),
+                $data['status_code'] ?: $response->getStatusCode(),
+                $response
+            );
+        }
     }
 
     /**
@@ -90,6 +132,17 @@ class FitBit extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        // TODO: Implement createResourceOwner() method.
+        return new FitBitResourceOwner($response);
+    }
+
+    /**
+     * Returns the string that should be used to separate scopes when building
+     * the URL for requesting an access token.
+     *
+     * @return string Scope separator, overwrote to default to a space
+     */
+    protected function getScopeSeparator()
+    {
+        return ' ';
     }
 }

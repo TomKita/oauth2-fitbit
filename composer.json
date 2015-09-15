@@ -6,5 +6,5 @@
         "psr-4": {
             "TomKita\\OAuth2\\Client\\": "src/"
         }
-    },
+    }
 }
