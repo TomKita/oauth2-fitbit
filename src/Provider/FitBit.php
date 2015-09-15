@@ -130,4 +130,5 @@ class FitBit extends AbstractProvider
     {
         return ' ';
     }
+
 }
