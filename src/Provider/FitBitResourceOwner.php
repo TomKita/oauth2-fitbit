@@ -31,7 +31,7 @@ class FitBitResourceOwner implements ResourceOwnerInterface
      */
     public function getId()
     {
-       var_dump($this->response); die;
+       return $this->response['user']['encodedId'];
     }
 
     /**
