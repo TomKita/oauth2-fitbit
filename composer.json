@@ -1,0 +1,10 @@
+{
+    "require": {
+        "league/oauth2-client": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TomKita\\OAuth2\\Client\\": "src/"
+        }
+    },
+}
