@@ -43,5 +43,4 @@ class FitBitResourceOwner implements ResourceOwnerInterface
     {
         return $this->response;
     }
-    
 }

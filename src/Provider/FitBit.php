@@ -77,9 +77,13 @@ class FitBit extends AbstractProvider
      */
     protected function getAccessTokenOptions(array $params)
     {
-        $options = ['headers' =>
-                        ['Authorization' => 'Basic ' . base64_encode($params['client_id'] . ':' . $params['client_secret']),
-                         'content-type'  => 'application/x-www-form-urlencoded']];
+        $options = [
+            'headers' =>
+                [
+                    'Authorization' => 'Basic ' . base64_encode($params['client_id'] . ':' . $params['client_secret']),
+                    'content-type'  => 'application/x-www-form-urlencoded'
+                ]
+        ];
 
         if ($this->getAccessTokenMethod() === self::METHOD_POST) {
             $options['body'] = $this->getAccessTokenBody($params);
@@ -130,5 +134,4 @@ class FitBit extends AbstractProvider
     {
         return ' ';
     }
-
 }
