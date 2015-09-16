@@ -102,10 +102,10 @@ class FitBit extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        if (isset($data['error'])) {
+        if (isset($data['errors'])) {
             throw new IdentityProviderException(
-                $data['error_description'] ?: $response->getReasonPhrase(),
-                $data['status_code'] ?: $response->getStatusCode(),
+                $data['errors'][0]['message'] ?: $response->getReasonPhrase(),
+                $response->getStatusCode(),
                 $response
             );
         }
