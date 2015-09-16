@@ -3,7 +3,7 @@
 use Mockery as m;
 use TomKita\OAuth2\Client\Provider\FitBit;
 
-class EventbriteTest extends \PHPUnit_Framework_TestCase
+class FitBitTest extends \PHPUnit_Framework_TestCase
 {
     protected $provider;
 
